@@ -1,5 +1,5 @@
 token.txt
-/node_modules
+node_modules/*
 model/data/*
 *__pycache__
 *.ipynb_checkpoints
