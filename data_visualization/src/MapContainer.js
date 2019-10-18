@@ -48,7 +48,7 @@ export class MapContainer extends React.Component {
   }
 }
 
-let token = "AIzaSyB7Lc_yGhFP6sGyg5EK5niszTkXqv9BmtM";
+let token = ;
 
 // fetch('http://localhost:3001/api/getToken')
 //       .then((data) => data.text())
