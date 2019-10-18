@@ -4,18 +4,30 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const Data = require('./data');
+var fs = require('fs');
+var path = require('path');   
 
 const API_PORT = 3001;
 const app = express();
 app.use(cors());
 const router = express.Router();
 
+
+// Put data to mongoDB
+let rawdata = fs.readFileSync('../city_data.json');
+let cities = JSON.parse(rawdata);
+let transferData = {}
+for (var key in cities) {
+  transferData[key] = cities[key]['city']['geo'];
+}
+
+
 // this is our MongoDB database
 const dbRoute =
   'mongodb+srv://reggiehsu111:abcd1234@m1631-cgddj.azure.mongodb.net/test?retryWrites=true&w=majority';
 
 // connects our back end code with the database
-mongoose.connect(dbRoute, { useNewUrlParser: true });
+mongoose.connect(dbRoute, { useNewUrlParser: true , useUnifiedTopology: true});
 
 let db = mongoose.connection;
 
@@ -30,14 +42,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  Data.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
+  res.send(transferData);
 });
+
+// get method to get google api token from token.txt
+router.get('/getToken', (req, res) =>{
+  filePath = path.join(__dirname, 'token.txt');
+  fs.readFile(filePath, 'utf8', function(err, data) {
+    if (!err) {
+        res.writeHead(200, {'Content-Type': 'text'});
+        res.write(data);
+        res.end();
+    } else {
+        console.log(err);
+      }
+  });
+})
 
 // this is our update method
 // this method overwrites existing data in our database
@@ -64,16 +88,10 @@ router.delete('/deleteData', (req, res) => {
 router.post('/putData', (req, res) => {
   let data = new Data();
 
-  const { id, message } = req.body;
+  const { city, geo } = req.body;
 
-  if ((!id && id !== 0) || !message) {
-    return res.json({
-      success: false,
-      error: 'INVALID INPUTS',
-    });
-  }
-  data.message = message;
-  data.id = id;
+  data.geo= geo;
+  data.city = city;
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });

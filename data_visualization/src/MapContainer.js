@@ -1,10 +1,6 @@
 import React from 'react';
-import { Map, GoogleApiWrapper, Marker, HeatMap } from 'google-maps-react';
+import { Map, Marker, HeatMap, GoogleApiWrapper } from 'google-maps-react';
 
-
-
-// Put your token here
-const Token = "AIzaSyA7b3wUGDeSW7MnoSrDPVbV_VUCup1Y814";
 
 
 const mapStyles = {
@@ -15,7 +11,7 @@ const mapStyles = {
 export class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       stores: [{latitude: 51, longitude: -0.12}]
     }
@@ -52,9 +48,14 @@ export class MapContainer extends React.Component {
   }
 }
 
+let token = ;
+
+// fetch('http://localhost:3001/api/getToken')
+//       .then((data) => data.text())
+//       .then((res) => token = res);
 
 
 export default GoogleApiWrapper({
-  apiKey: Token,
+  apiKey: token,
   libraries: ["visualization"]
-})(MapContainer);
+}) (MapContainer);

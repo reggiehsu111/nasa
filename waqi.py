@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pickle
 from tqdm import tqdm
+import json
 
 
 def parse_city_data(city_name):
@@ -39,18 +40,27 @@ def make_dict():
 		data_dict[elem[0]] = elem[1]
 	return data_dict
 
+def clean_dict():
+	data_dict = make_dict()
+
+	i = 0
+	missing = []
+	for key in data_dict:
+		i+=1
+		try:
+			print(i, key, data_dict[key]['aqi'])
+		except:
+			missing.append(key)
+	print("Total missing keys:", len(missing))
+	for key in missing:
+		del data_dict[key]
+	with open('city_data_dict.pkl', 'wb') as file:
+		pickle.dump(data_dict, file)
+
 
 if __name__ == '__main__':
-	city_data_dict = make_dict()
-	keys_to_delete = []
-	print("length of city_data_dict:", len(city_data_dict))
-	for key in city_data_dict:
-		if city_data_dict[key] == 'can not connect':
-			keys_to_delete.append(key)
-			continue
-		# print(key)
-	for key in keys_to_delete:
-		del city_data_dict[key]
-	print("length of city_data_dict:", len(city_data_dict))
-	with open('city_data_dict.pkl', 'wb') as file:
-		pickle.dump(city_data_dict, file)
+	with open('city_data_dict.pkl', 'rb') as file:
+		city_data = pickle.load(file)
+	with open('city_data.json', 'w') as json_file:
+		json.dump(city_data, json_file)
+
