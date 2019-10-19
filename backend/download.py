@@ -35,11 +35,9 @@ class Database_Manager:
         query = "SELECT item.id, item.accuracy FROM item ORDER BY item.accuracy DESC"
         options = {}
         options['enableCrossPartitionQuery'] = True        
-        results = self.client.QueryItems(container['_self'], query, options)
+        results = self.client.QueryItems(container['_self'], query, options))
 
-        for result in results:
-            print(result)
-            input()
+        return results
 
 
     def find_database(self, id):
