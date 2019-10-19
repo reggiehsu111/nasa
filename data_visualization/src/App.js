@@ -3,7 +3,9 @@ import MapContainer from "./MapContainer";
 import axios from 'axios';
 import SidebarProfile from './sidebar';
 import Example from './Popover';
+import People from './people';
 import './App.css';
+
 
 
 class App extends React.Component{
@@ -12,8 +14,21 @@ class App extends React.Component{
     super(props);
     // initialize our state
     this.state = {
-    data: []
+    data: [],
+    peopleClicked: false
   	};
+  	this.onSetPeopleClicked = this.onSetPeopleClicked.bind(this);
+    this.onClickPeople = this.onClickPeople.bind(this);
+  }
+
+  onSetPeopleClicked(peopleClicked) {
+    this.setState({ peopleClicked });
+    console.log(this.state.peopleClicked);
+  }
+
+  onClickPeople(ev){
+    ev.preventDefault();
+    this.onSetPeopleClicked(!this.state.peopleClicked);
   }
 
   // componentDidMount(){
@@ -33,7 +48,8 @@ class App extends React.Component{
   	return(
   		<div>
         <MapContainer />
-        <SidebarProfile />
+        {this.state.peopleClicked ? <People />:<div></div>}
+        <SidebarProfile onClickPeople={this.onClickPeople.bind(this)}/>
         </div>
         )
   }

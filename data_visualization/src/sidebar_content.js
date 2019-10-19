@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MaterialTitlePanel from "./material_title_panel";
+import logo2 from "./logo2.png";
+import profile from "./profile.jpg";
+import People from './people'; 
 
 const styles = {
   sidebar: {
@@ -25,19 +28,32 @@ const styles = {
   }
 };
 
-const SidebarContent = props => {
-  const style = props.style
-    ? { ...styles.sidebar, ...props.style }
+class SidebarContent extends React.Component{
+  constructor(props) {
+      super(props);
+
+      this.state = {
+        styles,
+      };
+
+  }
+
+
+
+  render(){
+  const style = this.state.style
+    ? { ...styles.sidebar, ...this.state.style }
     : styles.sidebar;
 
-  
+
 
   return (
-    <MaterialTitlePanel title="PAir" style={style}>
+    <MaterialTitlePanel title={<img src={logo2} height="40" width="auto" alt="="/>} style={style}>
       <div style={styles.content}>
-        <a href="index.html" style={styles.sidebarLink}>
-          Home
+        <a  href="#" >
+          <img src={profile} height="auto" width="80" className="rounded-circle" alt="="/>
         </a>
+
         <div style={styles.divider} />
         <a  href="#" style={styles.sidebarLink}>
           Measured Air Quality
@@ -45,22 +61,18 @@ const SidebarContent = props => {
         <a  href="#" style={styles.sidebarLink}>
           Perceived Air Quality
         </a>
-        <a  href="#" style={styles.sidebarLink}>
-          Profile
-        </a>
+
         <a  href="#" style={styles.sidebarLink}>
           Vote
         </a>
-        <a  href="#" style={styles.sidebarLink}>
+        <a  href="#" style={styles.sidebarLink} onClick={this.props.onClickPeople}>
           Find Someone around
         </a>
       </div>
     </MaterialTitlePanel>
   );
-};
+  };
+}
 
-SidebarContent.propTypes = {
-  style: PropTypes.object
-};
 
 export default SidebarContent;
