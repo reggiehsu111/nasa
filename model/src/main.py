@@ -10,6 +10,6 @@ import numpy as np
 if __name__ == "__main__":
     np.random.seed(CONFIG["Seed"])
     # Gold_Generator()
-    Vote_Generator()
-    Model_Generator()
+    # Vote_Generator()
+    # Model_Generator()
     Evaluater()

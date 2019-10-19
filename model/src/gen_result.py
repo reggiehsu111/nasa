@@ -25,8 +25,10 @@ class Evaluater:
         self.__check_prediction_file__()
 
     def __gen_prediction_file__(self):
-
-        prediction_matrix = [ [ [0 for k in range(self.num_label)] for j in range(self.num_hour) ] for i in range(self.num_location) ]
+       
+        print("Generate Prediction File ...")
+        # prediction_matrix = [ [ [0 for k in range(self.num_label)] for j in range(self.num_hour) ] for i in range(self.num_location) ]
+        prediction_matrix = np.zeros((self.num_location, self.num_hour, self.num_label))
 
         for filename in tqdm(self.voting_filenames):
             
@@ -41,7 +43,6 @@ class Evaluater:
                 for outcome in range(self.num_label):
                     prediction_matrix[location][time][outcome] += self.model.get_given_voting(file_num, int(vote), outcome)
 
-        prediction_matrix = np.array(prediction_matrix)
         self.result = np.argmax(prediction_matrix, axis=2)
         with open("tmp.csv", "wb") as f:
             np.savetxt(f, self.result, delimiter=',', fmt='%s')
