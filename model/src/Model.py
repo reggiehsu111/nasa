@@ -3,7 +3,7 @@ import numpy as np
 class Model:
     def __init__(self, size):
         self.matrix_list = [ [] for i in range(size)]
-
+        
         '''
               label1 label2 label3 label4
         vote1
@@ -11,12 +11,6 @@ class Model:
         vote3
         vote4
         '''
-        
-    '''def set_given_golden(self, id, prob_list):
-        self.obj_list[id].set_given_golden(prob_list)
-
-    def set_given_voting(self, id, prob_list):
-        self.obj_list[id].set_given_voting(prob_list)'''
 
     def get_given_golden(self, id, condition, outcome):
         given_golden_distribution = self.matrix_list[id][:, condition]

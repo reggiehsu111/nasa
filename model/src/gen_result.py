@@ -3,6 +3,7 @@ import pickle
 import os
 from tqdm import tqdm
 import numpy as np
+from weight import get_weight
 
 class Evaluater:
     def __init__(self):
@@ -40,12 +41,11 @@ class Evaluater:
                 if location / self.num_location <= self.observed_ratio:
                     continue
                 
-                for outcome in range(self.num_label):
-                    prediction_matrix[location][time][outcome] += self.model.get_given_voting(file_num, int(vote), outcome)
+                prediction_matrix[location][time] += get_weight(self.model, file_num, int(vote))
 
         self.result = np.argmax(prediction_matrix, axis=2)
-        with open("tmp.csv", "wb") as f:
-            np.savetxt(f, self.result, delimiter=',', fmt='%s')
+        # with open("tmp.csv", "wb") as f:
+            # np.savetxt(f, self.result, delimiter=',', fmt='%s')
 
     def __check_prediction_file__(self):
 

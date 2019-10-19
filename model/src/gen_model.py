@@ -26,7 +26,7 @@ def Model_Generator():
     voting_filenums = [i for i in range(num_people)]
 
     with Pool(config.CONFIG["Thread_Num"]) as p:
-      matrix_list = list(tqdm(p.imap(__count_distribution__, [(file_num, gold_labels) for file_num in voting_filenums]), total=len(voting_filenums)))
+        matrix_list = list(tqdm(p.imap(__count_distribution__, [(file_num, gold_labels) for file_num in voting_filenums]), total=len(voting_filenums)))
     # matrix_list = [ [] for i in range(len(voting_filenums))]
     # for i in tqdm(range(len(voting_filenums))):
         # file_num = voting_filenums[i]
