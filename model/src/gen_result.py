@@ -14,6 +14,7 @@ class Evaluater:
         self.num_people = config.CONFIG["Simulation"]["N_p"]
         self.num_location = config.CONFIG["Simulation"]["N_L"]
         self.observed_ratio = config.CONFIG["Simulation"]["R_ob"]
+        self.smart_ratio = config.CONFIG["Simulation"]["R_g"]
         with open(config.gold_filename, "rb") as f:
             self.gold_labels = np.genfromtxt(f, delimiter=',')
         self.voting_filenames = sorted(os.listdir(config.vote_dir_name))[:-1]
@@ -60,4 +61,7 @@ class Evaluater:
                 else:
                     wrong += 1
         accuracy = correct / (correct + wrong)
+        print("R_ob", self.observed_ratio)
+        print("N_p", self.num_people)
+        print("R_g", self.smart_ratio)
         print("accuracy: ", accuracy)
