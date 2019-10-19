@@ -8,11 +8,11 @@ import HH from "./HH.jpg";
 import Juan from "./Juan.jpg";
 import wang from "./wang.jpg";
 import Mao from "./Mao.jpg";
-import Image from 'react-image-resizer';
+import Crayon from "./crayon.jpeg";
 
 const styles = {
   sidebar: {
-    width: 700,
+    width: 512,
     height: "100%"
   },
   sidebarLink: {
@@ -29,7 +29,9 @@ const styles = {
   content: {
     padding: "16px",
     height: "100%",
-    backgroundColor: "lavender"
+    backgroundColor: "lavender",
+    flexWrap: "wrap",
+    alignItems: "center"
   }
 };
 
@@ -65,6 +67,7 @@ const PeopleContent = props => {
             <img src={Mao} height="150" width="auto" className="rounded-circle mx-auto d-block"/>
           </div>
           <div className="col" >
+            <img src={Crayon} height="150" width="auto" className="rounded-circle mx-auto d-block"/>
           </div>
         </div>
       </div>

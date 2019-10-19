@@ -47,9 +47,13 @@ class App extends React.Component{
   	console.log(this.state.data);
   	return(
   		<div>
+  		<div>
         <MapContainer />
+        </div>
+        <div>
         {this.state.peopleClicked ? <People />:<div></div>}
         <SidebarProfile onClickPeople={this.onClickPeople.bind(this)}/>
+        </div>
         </div>
         )
   }
