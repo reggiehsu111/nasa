@@ -2,14 +2,15 @@ import numpy as np
 
 class Model:
     def __init__(self, size):
-        self.matrix_list = [ [] for i in range(size)]
-        
+        self.matrix_list = []
+
+
         '''
-              label1 label2 label3 label4
-        vote1
-        vote2
-        vote3
-        vote4
+        matrix =      label1 label2 label3 label4
+                vote1
+                vote2
+                vote3
+                vote4
         '''
 
     def get_given_golden(self, id, condition, outcome):

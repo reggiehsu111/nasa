@@ -1,6 +1,5 @@
 import React from 'react';
 import MapContainer from "./MapContainer";
-// import SidebarProfile from './sidebar';
 import Example from './Popover';
 import People from './people';
 import './App.css';
