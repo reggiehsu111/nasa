@@ -1,6 +1,9 @@
 import React from 'react';
-import MapContainer from "./MapContainer"
+import MapContainer from "./MapContainer";
 import axios from 'axios';
+import SidebarProfile from './sidebar';
+import Example from './Popover';
+import './App.css';
 
 
 class App extends React.Component{
@@ -13,14 +16,14 @@ class App extends React.Component{
   	};
   }
 
-  componentDidMount(){
-  	this.getDataFromDb();
-  };
+  // componentDidMount(){
+  // 	this.getDataFromDb();
+  // };
 
   getDataFromDb = () => {
     fetch('http://localhost:3001/api/getData')
       .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
+      .then((res) => console.log(res.data));
   };
 
 
@@ -28,7 +31,10 @@ class App extends React.Component{
   render() {
   	console.log(this.state.data);
   	return(
+  		<div>
         <MapContainer />
+        <SidebarProfile />
+        </div>
         )
   }
 }

@@ -1,17 +1,18 @@
 import React from 'react';
 import { Map, Marker, HeatMap, GoogleApiWrapper } from 'google-maps-react';
-
-
+// import city_data from 'city_data.json';
 
 const mapStyles = {
   width: '100%',
   height: '100%',
 };
 
-export class MapContainer extends React.Component {
+class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    
+    // fetch('../city_data.json')
+    // .then((data) => {data.json()})
+    // .then((res) => {this.setState({data: res})})
     this.state = {
       stores: [{latitude: 51, longitude: -0.12}]
     }
@@ -48,7 +49,7 @@ export class MapContainer extends React.Component {
   }
 }
 
-let token = ;
+let token = "AIzaSyB7Lc_yGhFP6sGyg5EK5niszTkXqv9BmtM";
 
 // fetch('http://localhost:3001/api/getToken')
 //       .then((data) => data.text())

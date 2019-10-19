@@ -16,10 +16,7 @@ const router = express.Router();
 // Put data to mongoDB
 let rawdata = fs.readFileSync('../city_data.json');
 let cities = JSON.parse(rawdata);
-let transferData = {}
-for (var key in cities) {
-  transferData[key] = cities[key]['city']['geo'];
-}
+
 
 
 // this is our MongoDB database
@@ -46,22 +43,15 @@ app.use(logger('dev'));
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  res.send(transferData);
+  async function transfer(){
+    let transferData = {}
+    await for (var key in cities) {
+      transferData[key] = cities[key]['city']['geo'];
+    }
+    res.send(transferData);
+  }
+  
 });
-
-// get method to get google api token from token.txt
-router.get('/getToken', (req, res) =>{
-  filePath = path.join(__dirname, 'token.txt');
-  fs.readFile(filePath, 'utf8', function(err, data) {
-    if (!err) {
-        res.writeHead(200, {'Content-Type': 'text'});
-        res.write(data);
-        res.end();
-    } else {
-        console.log(err);
-      }
-  });
-})
 
 // this is our update method
 // this method overwrites existing data in our database
