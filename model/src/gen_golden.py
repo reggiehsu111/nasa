@@ -1,3 +1,5 @@
+import sys 
+sys.path.append('..')
 import numpy as np
 import config
 
@@ -19,5 +21,6 @@ class Gold_Generator:
         # labels = np.hstack((index_label, labels))
         # print(labels)
 
+        
         with open(config.gold_filename, "wb") as f:
             np.savetxt(f, labels, delimiter=',', fmt='%s')
