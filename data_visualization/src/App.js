@@ -37,6 +37,7 @@ class App extends React.Component{
       peopleClicked: false,
       realMapClicked:false,
       perceivedClicked:false,
+      satelliteClicked:false,
       voteClicked: false,
       docked: false,
       open: false,
@@ -48,10 +49,19 @@ class App extends React.Component{
       dragToggleDistance: 30,
       data: [],
       perceivedData: [],
+      locData: [],
       apiKey: undefined
   	};
   }
 
+  loadloc= () => {
+  	axios.get(url+"/loc_data")
+  	.then(res => {
+  		this.setState({locData : res.data});
+  		console.log("locData",res.data)
+  		})
+  	.catch(err => console.log(err))
+  }
 
   loadPerceived = () => {
   	axios.get(url+"/perceived_data")
@@ -97,6 +107,17 @@ class App extends React.Component{
     console.log(this.state.realMapClicked);
   }
 
+  onSetSatelliteClicked = (satelliteClicked) => {
+    this.setState({ satelliteClicked });
+    console.log(this.state.satelliteClicked);
+  }
+
+  onClickSatelliteMap = (ev) => {
+  	ev.preventDefault();
+    this.onSetSatelliteClicked(!this.state.satelliteClicked);
+    console.log("Clicked satellite");
+  }
+
   onClickRealMap = (ev) => {
     ev.preventDefault();
     this.onSetRealMapClicked(!this.state.realMapClicked);
@@ -111,6 +132,7 @@ class App extends React.Component{
     ev.preventDefault();
     this.onSetPerceivedClicked(!this.state.perceivedClicked);
 	}
+	
 	AfterVote = (ev) => {
 		ev.preventDefault();
 		this.onSetVoteClicked(!this.state.voteClicked);
@@ -161,10 +183,11 @@ class App extends React.Component{
       .then(data => data.text())
       .then(res => this.setState({apiKey: res}));
     this.loadPerceived();
+    this.loadloc();
   };
 
   render() {
-  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople} onClickRealMap={this.onClickRealMap}onClickPerceivedMap={this.onClickPerceivedMap} onClickVote={this.onClickVote}/>;
+  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople} onClickRealMap={this.onClickRealMap}onClickPerceivedMap={this.onClickPerceivedMap} onClickVote={this.onClickVote} onClickSatelliteMap={this.onClickSatelliteMap}/>;
     const contentHeader = (
       <span>
         {!this.state.docked && (
@@ -201,7 +224,7 @@ class App extends React.Component{
         <MaterialTitlePanel title={contentHeader}>
           <div>
           {this.state.apiKey === undefined ? null :
-          	<MapContainer apiKey={this.state.apiKey} data={this.state.realMapClicked?this.state.data:null} perceivedData={this.state.perceivedClicked?this.state.perceivedData:null} />
+          	<MapContainer apiKey={this.state.apiKey} data={this.state.realMapClicked?this.state.data:null} perceivedData={this.state.perceivedClicked?this.state.perceivedData:null} locData={this.state.satelliteClicked?this.state.locData:null}/>
           }
           </div>
         

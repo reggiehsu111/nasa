@@ -3,6 +3,7 @@ import numpy as np
 from tqdm import tqdm
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+import pickle
 
 app = Flask(__name__)
 CORS(app,resources={r"/*": {"origins": "*"}})
@@ -65,6 +66,13 @@ class Database_Manager:
             print("ERROR! DB not found")
             exit()   
 
+    def load_pickle(self):
+        with open('loc_cal.pkl', 'rb') as f:
+            data = pickle.load(f)
+        print(data)
+        self.loc = data
+        return data
+
     def find_container(self, database_link, id):
         print('Query for Collection')
 
@@ -89,11 +97,20 @@ def json_response(payload, status=200):
  return (json.dumps(payload), status, {'content-type': 'application/json'})
 
 @app.route('/perceived_data', methods=["GET"])
-def get_preceiced_data():
+def get_preceived_data():
     try:
         return jsonify(nasa_dbm.aqi_data)
     except:
         results = nasa_dbm.load_AQI_data()
+        print("called")
+    return jsonify(results)
+
+@app.route('/loc_data', methods=["GET"])
+def get_loc_data():
+    try:
+        return jsonify(nasa_dbm.loc)
+    except:
+        results = nasa_dbm.load_pickle()
         print("called")
     return jsonify(results)
 

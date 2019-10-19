@@ -61,6 +61,9 @@ class SidebarContent extends React.Component{
         <a  href="#" style={styles.sidebarLink} onClick={this.props.onClickPerceivedMap}>
           Perceived Air Quality
         </a>
+        <a  href="#" style={styles.sidebarLink} onClick={this.props.onClickSatelliteMap}>
+          Satellite
+        </a>
 
         <a  href="#" style={styles.sidebarLink} onClick={this.props.onClickVote} >
           Vote

@@ -45,6 +45,25 @@ class MapContainer extends React.Component {
     this.state = {
     }
   }
+  displaylonlat = () => {
+    if (this.props.locData == null){return <div></div>}
+      console.log("locData:",this.props.locData);
+    let markers = [];
+    for (const [idx, position] of this.props.locData.entries()) {
+      markers.push(<Marker
+        key={idx}
+        position={{
+          lat: position.latitude,
+          lng: position.longitude
+        }}
+        icon={
+          `http://chart.apis.google.com/chart?chst=d_map_pin_letter&` +
+          `chld=${position.AQI}|${markerColor[position.AQI-1]}|000000`
+        }
+      />);
+    }
+    return markers;
+  }
 
   displayPercieved = () => {
     if (this.props.perceivedData == null){return <div></div>}
@@ -63,7 +82,7 @@ class MapContainer extends React.Component {
         // onClick={() => console.log("You clicked me!")}
       />);
     }
-    return markers
+    return markers;
   }
 
   displayHeatmap = () => {
@@ -126,6 +145,7 @@ class MapContainer extends React.Component {
           style={mapStyles}
           initialCenter={{ lat: 24, lng: 121}}
         >
+          {this.displaylonlat()}
           {this.displayMarkers()}
           {this.displayPercieved()}
           {/* {this.displayHeatmap()} */}
