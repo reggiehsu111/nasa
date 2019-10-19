@@ -29,7 +29,18 @@ class Database_Manager:
         results = self.client.QueryItems(container['_self'], query, options)
         return results
 
-    
+    def load_accuracy_data(self):
+        db = self.find_database(self.config['DATABASE'])
+        container = self.find_container("dbs/" +self.config['DATABASE'],  "accuracy")
+        query = "SELECT item.id, item.accuracy FROM item ORDER BY item.accuracy DESC"
+        options = {}
+        options['enableCrossPartitionQuery'] = True        
+        results = self.client.QueryItems(container['_self'], query, options)
+
+        for result in results:
+            print(result)
+            input()
+
 
     def find_database(self, id):
         print('Query for Database')
@@ -70,5 +81,5 @@ class Database_Manager:
 
 if __name__ == "__main__":
     nasa_dbm = Database_Manager()
-    nasa_dbm.load_AQI_data()
-    
+    # nasa_dbm.load_AQI_data()
+    nasa_dbm.load_accuracy_data()
