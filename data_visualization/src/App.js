@@ -2,6 +2,7 @@ import React from 'react';
 import MapContainer from "./MapContainer";
 import Example from './Popover';
 import People from './people';
+import Vote from './Vote';
 import './App.css';
 import apiKey from './api_key.txt';
 import cityData from './city_data.json';
@@ -10,6 +11,9 @@ import MaterialTitlePanel from "./material_title_panel";
 import SidebarContent from "./sidebar_content";
 import logo2 from "./logo2.png";
 import epaData from './epa.json';
+import axios from 'axios';
+
+const url = "http://localhost:5000";
 
 const styles = {
   contentHeaderMenuLink: {
@@ -32,7 +36,8 @@ class App extends React.Component{
     this.state = {
       peopleClicked: false,
       realMapClicked:false,
-      apiKey: undefined,
+      perceivedClicked:false,
+      voteClicked: false,
       docked: false,
       open: false,
       transitions: true,
@@ -42,16 +47,23 @@ class App extends React.Component{
       touchHandleWidth: 20,
       dragToggleDistance: 30,
       data: [],
+      perceivedData: [],
       apiKey: undefined
   	};
-  	this.onSetPeopleClicked = this.onSetPeopleClicked.bind(this);
-    // this.onClickPeople = this.onClickPeople.bind(this);
-    this.onSetOpen = this.onSetOpen.bind(this);
-    // this.menuButtonClick = this.menuButtonClick.bind(this);
   }
 
 
-  onSetOpen(open) {
+  loadPerceived = () => {
+  	axios.get(url+"/perceived_data")
+  	.then(res => {
+  		this.setState({perceivedData : res.data});
+  		console.log(res.data)
+  		})
+  	.catch(err => console.log(err))
+  }
+
+
+  onSetOpen = (open) => {
     this.setState({ open });
   }
 
@@ -59,7 +71,8 @@ class App extends React.Component{
     ev.preventDefault();
     this.onSetOpen(!this.state.open);
   }
-  onSetPeopleClicked(peopleClicked) {
+
+  onSetPeopleClicked = (peopleClicked) => {
     this.setState({ peopleClicked });
     console.log(this.state.peopleClicked);
   }
@@ -67,6 +80,16 @@ class App extends React.Component{
   onClickPeople = (ev) => {
     ev.preventDefault();
     this.onSetPeopleClicked(!this.state.peopleClicked);
+  }
+
+  onSetVoteClicked = (voteClicked) => {
+    this.setState({ voteClicked });
+    console.log(this.state.voteClicked);
+  }
+
+  onClickVote = (ev) => {
+    ev.preventDefault();
+    this.onSetVoteClicked(!this.state.voteClicked);
   }
 
   onSetRealMapClicked = (realMapClicked) => {
@@ -77,6 +100,21 @@ class App extends React.Component{
   onClickRealMap = (ev) => {
     ev.preventDefault();
     this.onSetRealMapClicked(!this.state.realMapClicked);
+	}
+
+	onSetPerceivedClicked = (perceivedClicked) => {
+    this.setState({ perceivedClicked });
+    console.log(this.state.perceivedClicked);
+  }
+
+  onClickPerceivedMap = (ev) => {
+    ev.preventDefault();
+    this.onSetPerceivedClicked(!this.state.perceivedClicked);
+	}
+	AfterVote = (ev) => {
+		ev.preventDefault();
+		this.onSetVoteClicked(!this.state.voteClicked);
+		this.onSetPeopleClicked(!this.state.peopleClicked);
 	}
 
   getAqiCatagory = (aqi) => {
@@ -122,10 +160,11 @@ class App extends React.Component{
     fetch(apiKey)
       .then(data => data.text())
       .then(res => this.setState({apiKey: res}));
+    this.loadPerceived();
   };
 
   render() {
-  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople} onClickRealMap={this.onClickRealMap}/>;
+  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople} onClickRealMap={this.onClickRealMap}onClickPerceivedMap={this.onClickPerceivedMap} onClickVote={this.onClickVote}/>;
     const contentHeader = (
       <span>
         {!this.state.docked && (
@@ -162,13 +201,14 @@ class App extends React.Component{
         <MaterialTitlePanel title={contentHeader}>
           <div>
           {this.state.apiKey === undefined ? null :
-          	<MapContainer apiKey={this.state.apiKey} data={this.state.realMapClicked?this.state.data:null} />
+          	<MapContainer apiKey={this.state.apiKey} data={this.state.realMapClicked?this.state.data:null} perceivedData={this.state.perceivedClicked?this.state.perceivedData:null} />
           }
           </div>
         
         </MaterialTitlePanel>
       </Sidebar>
       {this.state.peopleClicked ? <People />:<div></div>}
+      {this.state.voteClicked ? <Vote handleVote={this.AfterVote}/>:<div></div>}
      </div>
 
     );

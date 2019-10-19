@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MaterialTitlePanel from "./material_title_panel";
-import profile from "./profile.jpg";
 import Coco from "./Coco.jpg";
 import Eric from "./Eric.jpg";
 import HH from "./HH.jpg";
@@ -29,7 +28,7 @@ const styles = {
   content: {
     padding: "16px",
     height: "100%",
-    backgroundColor: "lavender",
+    backgroundColor: "white",
     flexWrap: "wrap",
     alignItems: "center"
   }

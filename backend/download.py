@@ -1,9 +1,11 @@
 import azure.cosmos.cosmos_client as cosmos_client
 import numpy as np
 from tqdm import tqdm
-from flask import Flask
-app = Flask(__name__)
+from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app,resources={r"/*": {"origins": "*"}})
 
 '''
 Trash Code
@@ -30,9 +32,21 @@ class Database_Manager:
         options = {}
         options['enableCrossPartitionQuery'] = True        
         results = self.client.QueryItems(container['_self'], query, options)
-        return results
+        res = [x for x in results]
+        self.aqi_data = res
+        return res
 
-    
+    def load_accuracy_data(self):
+        db = self.find_database(self.config['DATABASE'])
+        container = self.find_container("dbs/" +self.config['DATABASE'],  "accuracy")
+        query = "SELECT item.id, item.accuracy FROM item ORDER BY item.accuracy DESC"
+        options = {}
+        options['enableCrossPartitionQuery'] = True        
+        results = self.client.QueryItems(container['_self'], query, options)
+        res = [x for x in results]
+        self.load_accuracy_data = res
+        return res
+
 
     def find_database(self, id):
         print('Query for Database')
@@ -71,14 +85,22 @@ class Database_Manager:
             print("ERROR! Container not found")
             exit()
 
-@app.route('/perceived_data')
-def hello():
-    return "Hello World!"
+def json_response(payload, status=200):
+ return (json.dumps(payload), status, {'content-type': 'application/json'})
+
+@app.route('/perceived_data', methods=["GET"])
+def get_preceiced_data():
+    try:
+        return jsonify(nasa_dbm.aqi_data)
+    except:
+        results = nasa_dbm.load_AQI_data()
+        print("called")
+    return jsonify(results)
 
 if __name__ == "__main__":
-    # nasa_dbm = Database_Manager()
-    # results = nasa_dbm.load_AQI_data()
-    # for x in results:
-    #     print(x)
-    app.run()
-    
+
+
+    nasa_dbm = Database_Manager()
+    # nasa_dbm.load_AQI_data()
+    # nasa_dbm.load_accuracy_data()
+    app.run(debug=True)
