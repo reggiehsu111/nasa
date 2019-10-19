@@ -1,6 +1,9 @@
 import azure.cosmos.cosmos_client as cosmos_client
 import numpy as np
 from tqdm import tqdm
+from flask import Flask
+app = Flask(__name__)
+
 
 '''
 Trash Code
@@ -68,7 +71,14 @@ class Database_Manager:
             print("ERROR! Container not found")
             exit()
 
+@app.route('/perceived_data')
+def hello():
+    return "Hello World!"
+
 if __name__ == "__main__":
-    nasa_dbm = Database_Manager()
-    nasa_dbm.load_AQI_data()
+    # nasa_dbm = Database_Manager()
+    # results = nasa_dbm.load_AQI_data()
+    # for x in results:
+    #     print(x)
+    app.run()
     
