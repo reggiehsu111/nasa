@@ -7,7 +7,7 @@ CONFIG = {
         "R_ob": 0.1,
         "N_p": 1000,
         "N_vl": 10,
-        "R_g": 0.2,
+        "R_g": 0.1,
         "sd": 1.5
     },
     "Prediction" : {

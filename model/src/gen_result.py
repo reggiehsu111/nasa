@@ -61,7 +61,7 @@ class Evaluater:
                 else:
                     wrong += 1
         accuracy = correct / (correct + wrong)
-        print("R_ob", self.observed_ratio)
-        print("N_p", self.num_people)
-        print("R_g", self.smart_ratio)
+        print("R_ob: ", self.observed_ratio)
+        print("N_p: ", self.num_people)
+        print("R_g: ", self.smart_ratio)
         print("accuracy: ", accuracy)
