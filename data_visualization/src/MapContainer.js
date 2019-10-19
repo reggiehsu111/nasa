@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, HeatMap, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker, HeatMap, Circle, GoogleApiWrapper } from 'google-maps-react';
 
 const mapStyles = {
   width: '100%',
@@ -49,13 +49,25 @@ class MapContainer extends React.Component {
   displayHeatmap = () => {
     if (this.props.data == null){return <div></div>}
     let positions = [];
-    for (const position of this.props.data) {
+    // let circles = [];
+    for (const [idx, position] of this.props.data.entries()) {
+      // circles.push(<Circle
+      //   key={idx + 10000}
+      //   radius={10}
+      //   center={{
+      //     lat: position.lat,
+      //     lng: position.lng
+      //   }}
+      //   fillColor={markerColor[position.aqi - 1]}
+      //   fillOpacity={0.2}
+      // />);
       positions.push({
         lat: position.lat,
         lng: position.lng,
         weight: position.aqi ** 2
       });
     }
+    // return circles;
     return <HeatMap
       positions={positions}
       opacity={0.5}
@@ -95,7 +107,7 @@ class MapContainer extends React.Component {
           initialCenter={{ lat: 24, lng: 121}}
         >
           {this.displayMarkers()}
-          {this.displayHeatmap()}
+          {/* {this.displayHeatmap()} */}
         </Map>
       </div>
     );
