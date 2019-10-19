@@ -67,7 +67,7 @@ const PeopleContent = props => {
             <img src={Mao} height="150" width="auto" className="rounded-circle mx-auto d-block"/>
           </div>
           <div className="col" >
-            <img src={Crayon} height="150" width="auto" className="rounded-circle mx-auto d-block"/>
+            <img src={Eric} height="150" width="auto" className="rounded-circle mx-auto d-block"/>
           </div>
         </div>
       </div>

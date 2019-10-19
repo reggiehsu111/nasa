@@ -83,10 +83,8 @@ class People extends React.Component {
 
     return (
       <Sidebar {...sidebarProps}>
-        <MaterialTitlePanel title={contentHeader}>
           <div style={styles.content}>
           </div>
-        </MaterialTitlePanel>
       </Sidebar>
     );
   }
