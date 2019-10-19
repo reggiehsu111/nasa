@@ -1,4 +1,4 @@
-token.txt
+api_key.txt
 node_modules/*
 model/data/*
 *__pycache__
