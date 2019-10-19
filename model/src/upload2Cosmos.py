@@ -13,7 +13,7 @@ Don' support remove and any error handling
 Just a temporal solution
 '''
 
-class database:
+class Database_Manager:
     def __init__(self):
         self.config = {
             'ENDPOINT': 'https://nasa-hackathon-db.documents.azure.com:443/',
@@ -24,100 +24,96 @@ class database:
         self.client = cosmos_client.CosmosClient(url_connection=self.config['ENDPOINT'], auth={
                                 'masterKey': self.config['PRIMARYKEY']})
 
-    
-    def InitDB(self, db_name, container_name):
-
-        '''
-        Don't run!!!!!!!!!
-        Only used in the very first time to initialize the database
-        '''
-
-        # Create a database
-        db = self.client.CreateDatabase({ 'id': db_name })
-
-        # Create container options
-        options = {
-            'offerThroughput': 400
-        }
-        container_definition = {
-            'id': container_name
-        }
-        # Create a container
-        container = self.client.CreateContainer(db['_self'], container_definition, options)
-        
-
     def upload_people(self):
         
-        # dbs and containers have only 
-        dbs = self.client.ReadDatabases()
-        for db in dbs:
-            self.db = db
-        containers = self.client.ReadContainers(self.db["_self"])
-        for container in containers:
-            self.container = container
+        # Create a database
+        db = self.find_or_create_database("nasa_DB")
+        # Create a container
+        database_link = "dbs/nasa_DB"
+        container = self.find_or_create_container(database_link, "accuracy")
 
         with open(config.model_filename, "rb") as f:
-            self.model = pickle.load(f)
+            model = pickle.load(f)
         
-        for i in tqdm(range(len(self.model.matrix_list))):
-            matrix = self.model.matrix_list[i]
+        for i in tqdm(range(len(model.matrix_list))):
+            matrix = model.matrix_list[i]
             acc = np.sum(np.diag(matrix)) / np.sum(matrix)
             item = dict()
             _id = "person_" + str(i)
             item["id"] = _id
             item["accuracy"] = acc
-            item = self.client.CreateItem(self.container['_self'], item)
+            item = self.client.CreateItem(container['_self'], item)
 
-    def getPositiveNews(self, query_id):
+    def upload_AQI(self):
 
-        '''
-        Given query_id, return all positive news (label = 3) in a list
-        query_id: int (1~20)
-        rvalue: list of str
-        '''
+        # Create a database
+        db = self.find_or_create_database("nasa_DB")
+        # Create a container
+        database_link = "dbs/nasa_DB"
+        container = self.find_or_create_container(database_link, "AQI_result")
 
-        sql_query = 'SELECT news.id FROM news WHERE news.query' + str(query_id).zfill(2) + '=3'
-        query = {'query': sql_query}
-        result_iterable = self.__getquery__(query)
-        result_list = [item['id'] for item in iter(result_iterable)]
-        return result_list
+        print(container['_self'])
 
-    def getNegativeNews(self, query_id):
+        with open("../../loc.csv", "rb") as f:
+            locations = np.genfromtxt(f, delimiter=',')
+        with open(config.gold_filename, "rb") as f:
+            gold_labels = np.genfromtxt(f, delimiter=',')
+        
+        for i in tqdm(range(1,len(locations))):
+            longtitude = locations[i, 0]
+            lattitude = locations[i, 1]
+            item = dict()
+            _id = "location_" + str(i)
+            item["id"] = _id
+            item["longtitude"] = longtitude
+            item["lattitude"] = lattitude
+            item["AQI"] = gold_labels[i, 0]
+            item = self.client.CreateItem(container['_self'], item)
 
-        '''
-        Given query_id, return all negative news (label = 0) in a list
-        query_id: int (1~20)
-        rvalue: list of str
-        '''
+    def find_or_create_database(self, id):
+        print('Query for Database')
 
-        sql_query = 'SELECT news.id FROM news WHERE news.query' + str(query_id).zfill(2) + '=0'
-        query = {'query': sql_query}
-        result_iterable = self.__getquery__(query)
-        result_list = [item['id'] for item in iter(result_iterable)]
-        return result_list
+        databases = list(self.client.QueryDatabases({
+            "query": "SELECT * FROM r WHERE r.id=@id",
+            "parameters": [
+                { "name":"@id", "value": id }
+            ]
+        }))
 
-    def labelNews(self, news_fname, query_id, label):
+        if len(databases) > 0:
+            print('Database with id \'{0}\' was found'.format(id))
+            return databases[0]
+        else:
+            return self.client.CreateDatabase({ 'id': db_name })    
 
-        '''
-        Update the label of query for a news
-        news_fname: str (news_xxxxxx)
-        query_id: int (1~20)
-        label: int (1~3)
-        '''
-        sql_query = 'SELECT * FROM news WHERE news.id=\"' + news_fname + '\"'
-        query = {'query': sql_query}
-        result_iterable = self.__getquery__(query)
-        for item in iter(result_iterable):
-            item['query'+str(query_id).zfill(2)] = label
-            self.client.ReplaceItem(item['_self'], item)
-        return       
+    def find_or_create_container(self, database_link, id):
+        print('Query for Collection')
 
-    def __getquery__(self, query):
-        options = {}
-        options['enableCrossPartitionQuery'] = True        
-        return self.client.QueryItems(self.container['_self'], query, options)
+        collections = list(self.client.QueryContainers(
+            database_link,
+            {
+                "query": "SELECT * FROM r WHERE r.id=@id",
+                "parameters": [
+                    { "name":"@id", "value": id }
+                ]
+            }
+        ))
+
+        if len(collections) > 0:
+            print('Collection with id \'{0}\' was found'.format(id))
+            return collections[0]
+        else:
+            options = {
+                'offerThroughput': 400
+            }
+            container_definition = {
+                'id': id
+            }
+            return self.client.CreateContainer(database_link, container_definition, options)
 
 if __name__ == "__main__":
-    nasa_db = database()
-    nasa_db.InitDB("nasa_DB", "accuracy")
-    nasa_db.upload_people()
+    nasa_dbm = Database_Manager()
+    # nasa_dbm.InitDB("nasa_DB", "accuracy")
+    # nasa_dbm.upload_people()
+    nasa_dbm.upload_AQI()
+    

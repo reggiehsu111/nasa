@@ -41,54 +41,46 @@ const markerColor = [
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    // fetch('../city_data.json')
-    // .then((data) => {data.json()})
-    // .then((res) => {this.setState({data: res})})
+
     this.state = {
     }
   }
 
   displayHeatmap = () => {
-    if (this.props.cityData == null){return <div></div>}
+    if (this.props.data == null){return <div></div>}
     let positions = [];
-    for (const [key, value] of Object.entries(this.props.cityData)) {
-      if (this.props.cityData.hasOwnProperty(key) && value.city.geo !== null && value.aqi !== '-') {
-        positions.push({
-          lat: value.city.geo[0],
-          lng: value.city.geo[1],
-          weight: 2 ** value.aqi
-        });
-        // console.log(value.aqi)
-      }
+    for (const position of this.props.data) {
+      positions.push({
+        lat: position.lat,
+        lng: position.lng,
+        weight: position.aqi ** 2
+      });
     }
     return <HeatMap
       positions={positions}
       opacity={0.5}
-      radius={1}
+      radius={0.1}
       gradient={gradient}
       dissipating={false}
     />;
   };
 
   displayMarkers = () => {
-    if (this.props.cityData == null){return <div></div>}
+    if (this.props.data == null){return <div></div>}
     let markers = [];
-    for (const [idx, [key, value]] of
-        Object.entries(Object.entries(this.props.cityData))) {
-      if (this.props.cityData.hasOwnProperty(key) && value.city.geo !== null) {
-        markers.push(<Marker
-          key={idx}
-          position={{
-            lat: value.city.geo[0],
-            lng: value.city.geo[1]
-          }}
-          icon={
-            `http://chart.apis.google.com/chart?chst=d_map_pin_letter&` +
-            `chld=${value.aqi}|${markerColor[value.aqi - 1]}|000000`
-          }
-          onClick={() => console.log("You clicked me!")}
-        />);
-      }
+    for (const [idx, position] of this.props.data.entries()) {
+      markers.push(<Marker
+        key={idx}
+        position={{
+          lat: position.lat,
+          lng: position.lng
+        }}
+        icon={
+          `http://chart.apis.google.com/chart?chst=d_map_pin_letter&` +
+          `chld=${position.aqi}|${markerColor[position.aqi - 1]}|000000`
+        }
+        // onClick={() => console.log("You clicked me!")}
+      />);
     }
     return markers
   };

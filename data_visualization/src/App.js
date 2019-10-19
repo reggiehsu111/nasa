@@ -9,6 +9,7 @@ import Sidebar from 'react-sidebar';
 import MaterialTitlePanel from "./material_title_panel";
 import SidebarContent from "./sidebar_content";
 import logo2 from "./logo2.png";
+import epaData from './epa.json';
 
 const styles = {
   contentHeaderMenuLink: {
@@ -29,10 +30,8 @@ class App extends React.Component{
     super(props);
     // initialize our state
     this.state = {
-      data: [],
       peopleClicked: false,
       realMapClicked:false,
-      cityData: {},
       apiKey: undefined,
       docked: false,
       open: false,
@@ -41,7 +40,9 @@ class App extends React.Component{
       shadow: true,
       pullRight: false,
       touchHandleWidth: 20,
-      dragToggleDistance: 30
+      dragToggleDistance: 30,
+      data: [],
+      apiKey: undefined
   	};
   	this.onSetPeopleClicked = this.onSetPeopleClicked.bind(this);
     // this.onClickPeople = this.onClickPeople.bind(this);
@@ -76,20 +77,40 @@ class App extends React.Component{
   onClickRealMap = (ev) => {
     ev.preventDefault();
     this.onSetRealMapClicked(!this.state.realMapClicked);
-  }
+	}
 
-  catagorizeAqi = () => {
-    for (const [key, value] of Object.entries(cityData)) {
-      if (cityData.hasOwnProperty(key) && value.city.geo !== null) {
-        for (const [idx, aqi] of aqiScale.entries()) {
-          if (value.aqi <= aqi) {
-            cityData[key].aqi = idx + 1;
-            break;
-          }
+  getAqiCatagory = (aqi) => {
+    for (const [idx, aqiBound] of aqiScale.entries()) {
+      if (aqi <= aqiBound) {
+        if (aqi !== '-') {
+          return idx + 1;
+        } else {
+          return '-';
         }
       }
     }
-    this.setState({cityData: cityData});
+}
+
+  catagorizeAqi = () => {
+    let positions = [];
+    for (const [key, value] of Object.entries(cityData)) {
+      if (cityData.hasOwnProperty(key) && value.city.geo !== null) {
+        positions.push({
+          lat: value.city.geo[0],
+          lng: value.city.geo[1],
+          aqi: this.getAqiCatagory(value.aqi)
+        });
+      }
+    }
+    console.log(epaData.feeds)
+    for (const station of epaData.feeds) {
+      positions.push({
+        lat: station.Latitude,
+        lng: station.Longitude,
+        aqi: this.getAqiCatagory(station.AQI)
+      });
+    }
+    this.setState({data: positions});
   };
 
   componentDidMount(){
@@ -141,7 +162,7 @@ class App extends React.Component{
         <MaterialTitlePanel title={contentHeader}>
           <div>
           {this.state.apiKey === undefined ? null :
-          	<MapContainer apiKey={this.state.apiKey} cityData={this.state.realMapClicked?this.state.cityData:null} />
+          	<MapContainer apiKey={this.state.apiKey} data={this.state.realMapClicked?this.state.data:null} />
           }
           </div>
         
@@ -149,6 +170,7 @@ class App extends React.Component{
       </Sidebar>
       {this.state.peopleClicked ? <People />:<div></div>}
      </div>
+
     );
   }
 }
