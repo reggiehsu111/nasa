@@ -31,6 +31,7 @@ class App extends React.Component{
     this.state = {
       data: [],
       peopleClicked: false,
+      realMapClicked:false,
       cityData: {},
       apiKey: undefined,
       docked: false,
@@ -67,6 +68,16 @@ class App extends React.Component{
     this.onSetPeopleClicked(!this.state.peopleClicked);
   }
 
+  onSetRealMapClicked = (realMapClicked) => {
+    this.setState({ realMapClicked });
+    console.log(this.state.realMapClicked);
+  }
+
+  onClickRealMap = (ev) => {
+    ev.preventDefault();
+    this.onSetRealMapClicked(!this.state.realMapClicked);
+  }
+
   catagorizeAqi = () => {
     for (const [key, value] of Object.entries(cityData)) {
       if (cityData.hasOwnProperty(key) && value.city.geo !== null) {
@@ -93,7 +104,7 @@ class App extends React.Component{
   };
 
   render() {
-  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople}/>;
+  	const sidebar = <SidebarContent onClickPeople={this.onClickPeople} onClickRealMap={this.onClickRealMap}/>;
     const contentHeader = (
       <span>
         {!this.state.docked && (
@@ -130,7 +141,7 @@ class App extends React.Component{
         <MaterialTitlePanel title={contentHeader}>
           <div>
           {this.state.apiKey === undefined ? null :
-          	<MapContainer apiKey={this.state.apiKey} cityData={this.state.cityData} />
+          	<MapContainer apiKey={this.state.apiKey} cityData={this.state.realMapClicked?this.state.cityData:null} />
           }
           </div>
         

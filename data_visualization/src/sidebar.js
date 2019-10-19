@@ -41,6 +41,7 @@ class SidebarProfile extends React.Component {
 
   onSetOpen(open) {
     this.setState({ open });
+    this.props.onClickPeople();
   }
 
   menuButtonClick(ev) {

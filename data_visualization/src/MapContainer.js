@@ -49,6 +49,7 @@ class MapContainer extends React.Component {
   }
 
   displayHeatmap = () => {
+    if (this.props.cityData == null){return <div></div>}
     let positions = [];
     for (const [key, value] of Object.entries(this.props.cityData)) {
       if (this.props.cityData.hasOwnProperty(key) && value.city.geo !== null && value.aqi !== '-') {
@@ -70,6 +71,7 @@ class MapContainer extends React.Component {
   };
 
   displayMarkers = () => {
+    if (this.props.cityData == null){return <div></div>}
     let markers = [];
     for (const [idx, [key, value]] of
         Object.entries(Object.entries(this.props.cityData))) {

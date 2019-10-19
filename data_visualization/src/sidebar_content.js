@@ -55,7 +55,7 @@ class SidebarContent extends React.Component{
         </a>
 
         <div style={styles.divider} />
-        <a  href="#" style={styles.sidebarLink}>
+        <a  href="#" style={styles.sidebarLink } onClick={this.props.onClickRealMap}>
           Measured Air Quality
         </a>
         <a  href="#" style={styles.sidebarLink}>
