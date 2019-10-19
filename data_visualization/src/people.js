@@ -1,9 +1,7 @@
 import React from "react";
 import Sidebar from 'react-sidebar';
+import PeopleContent from "./people_content";
 import MaterialTitlePanel from "./material_title_panel";
-import SidebarContent from "./sidebar_content";
-import logo2 from "./logo2.png";
-
 // Be sure to include styles at some point, probably during your bootstraping
 // import 'react-sidenav/dist/react-sidenav.css';
  
@@ -19,7 +17,7 @@ const styles = {
 };
   
 
-class SidebarProfile extends React.Component {
+class People extends React.Component {
 
   constructor(props) {
     super(props);
@@ -30,14 +28,17 @@ class SidebarProfile extends React.Component {
       transitions: true,
       touch: true,
       shadow: true,
-      pullRight: false,
+      pullRight: true,
       touchHandleWidth: 20,
-      dragToggleDistance: 30,
+      dragToggleDistance: 90
     };
 
     this.onSetOpen = this.onSetOpen.bind(this);
     this.menuButtonClick = this.menuButtonClick.bind(this);
     }
+  componentDidMount() {
+    this.setState({open: true});
+  }
 
   onSetOpen(open) {
     this.setState({ open });
@@ -50,7 +51,7 @@ class SidebarProfile extends React.Component {
 
 
   render() {
-    const sidebar = <SidebarContent onClickPeople={this.props.onClickPeople}/>;
+    const sidebar = <PeopleContent />;
     const contentHeader = (
       <span>
         {!this.state.docked && (
@@ -59,11 +60,11 @@ class SidebarProfile extends React.Component {
             href="#"
             style={styles.contentHeaderMenuLink}
           >
-            <img src={logo2} height="40" width="auto" alt="="/>
           </a>
         )}
       </span>
     );
+
 
     const sidebarProps = {
       sidebar,
@@ -92,4 +93,4 @@ class SidebarProfile extends React.Component {
 
   }
  
-export default SidebarProfile;
+export default People;
