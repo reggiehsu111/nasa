@@ -9,7 +9,9 @@ NASA Hackathon project by team M1631
 
 ## RUN THE PROJECT
 - Backend
-`cd ..; cd backend; python download.py`
+`cd backend; python download.py`
+- Frontend
+`cd data_visualization; npm start`
 
 ## MOTIVATION
 
