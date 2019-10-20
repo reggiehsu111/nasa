@@ -4,6 +4,8 @@ NASA Hackathon project by team M1631
 ## INSTALLATION
 - `pip install flask flask-cors azure-cosmos`
 - `cd data_visualization; npm i`
+- Register for a Microsoft Azure Subscription Key
+- Register for a GoogleMapsApiKey
 
 ## RUN THE PROJECT
 - Backend
