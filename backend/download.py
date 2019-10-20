@@ -67,7 +67,7 @@ class Database_Manager:
             exit()   
 
     def load_pickle(self):
-        with open('loc_cal.pkl', 'rb') as f:
+        with open('loc.pkl', 'rb') as f:
             data = pickle.load(f)
         print(data)
         self.loc = data
