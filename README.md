@@ -1,6 +1,15 @@
 # PAir
 NASA Hackathon project by team M1631
 
+## INSTALLATION
+`pip install flask flask-cors azure-cosmos`
+- Frontend
+`cd data_visualization; npm i`
+
+## RUN THE PROJECT
+- Backend
+`cd ..; cd backend; python download.py`
+
 ## MOTIVATION
 
 AQI(Air Quality Index) is a measure of air pollution. Currently, each country has their own way of calculating AQI. We observed an important usage of the AQI data is to serve as an indication of the air quality to the general public. Hence, aside from building a platform where satellite and ground-based data are aggregated and kept, we also desire to emphasize on the density of the data available rather than the exact precision of the index.
