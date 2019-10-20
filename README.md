@@ -3,7 +3,6 @@ NASA Hackathon project by team M1631
 
 ## INSTALLATION
 `pip install flask flask-cors azure-cosmos`
-- Frontend
 `cd data_visualization; npm i`
 
 ## RUN THE PROJECT
